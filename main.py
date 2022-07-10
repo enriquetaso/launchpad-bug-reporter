@@ -1,13 +1,14 @@
 #! /usr/bin/python3
-
 from datetime import datetime, timedelta, timezone
 
-from launchpadlib.launchpad.Launchpad import login_anonymously
+from launchpadlib.launchpad import Launchpad as LP
 
 LP_PROJECTS = ["cinder", "os-brick", "cinderlib", "cinder-tempest-plugin"]
 LP_PROJECT = "cinder"
 LP_ENV = "production"  # or 'staging'
 LP_LINK = "https://bugs.launchpad.net/%s/+bug/%d"
+LP_REASON = "testing"
+LP_VERSION = "devel"
 
 # These filter the types of bugs we want (i.e. anything open)
 STATUSES = [
@@ -39,11 +40,11 @@ def main():
     utc_start_date = utc_end_date - timedelta(days=days_to_subtract)
 
     # Anonymous and read-only access to public Launchpad data
-    lp = login_anonymously("testing", "production", cachedir, version="devel")
+    lp = LP.login_anonymously(LP_REASON, LP_ENV, cachedir, version=LP_VERSION)
 
-    basic_mgs = f"""Bug Report from {utc_start_date:%Y-%m-%d}
-    to {utc_end_date:%Y-%m-%d} with IMPORTANCE={IMPORTANCE[0]}"""
-    print(basic_mgs)
+    print("Bug Report")
+    print(f"from {utc_start_date:%Y-%m-%d} to {utc_end_date:%Y-%m-%d}")
+    print(f"with IMPORTANCE={IMPORTANCE[0]}")
 
     for lp_project in LP_PROJECTS:
         print(f"\n{lp_project}\n---")
@@ -56,16 +57,13 @@ def main():
         )
 
         if len(tasks) == 0:
-            msg = f"""No bugs from {utc_start_date:%Y-%m-%d}
-            to {utc_end_date:%Y-%m-%d}"""
-            print(msg)
+            print("No bugs")
         else:
             for task in tasks:
                 bug = task.bug
                 link = LP_LINK % (lp_project, bug.id)
-                info = f"""Bug #{bug.id} - {bug.title}\n
-                Date {bug.date_created:%Y-%m-%d}\nLink {link}\n"""
-                print(info)
+                print(f"Bug #{bug.id} - {bug.title}")
+                print(f"Date {bug.date_created:%Y-%m-%d}\nLink {link}\n")
 
 
 if __name__ == "__main__":
