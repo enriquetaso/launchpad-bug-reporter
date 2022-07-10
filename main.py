@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta, timezone
 
-from launchpadlib.launchpad import Launchpad
+from launchpadlib.launchpad.Launchpad import login_anonymously
 
 LP_PROJECTS = ["cinder", "os-brick", "cinderlib", "cinder-tempest-plugin"]
 LP_PROJECT = "cinder"
@@ -39,10 +39,7 @@ def main():
     utc_start_date = utc_end_date - timedelta(days=days_to_subtract)
 
     # Anonymous and read-only access to public Launchpad data
-    lp = Launchpad.login_anonymously("testing",
-                                     "production",
-                                     cachedir,
-                                     version="devel")
+    lp = login_anonymously("testing", "production", cachedir, version="devel")
 
     basic_mgs = f"""Bug Report from {utc_start_date:%Y-%m-%d}
     to {utc_end_date:%Y-%m-%d} with IMPORTANCE={IMPORTANCE[0]}"""
