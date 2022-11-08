@@ -30,7 +30,7 @@ No bugs from 2022-04-30 to 2022-05-10
 
 ### Installation
 ```
-python3 -m venv .env
+python3 -m venv myenv
 pip install -r requirements.txt
 python main.py
 ```
