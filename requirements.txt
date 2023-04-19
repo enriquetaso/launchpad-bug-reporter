@@ -1,2 +1,4 @@
-launchpadlib
-python-dateutil
+launchpadlib==1.10.18
+python-dateutil==2.8.2
+rich==13.3.4
+python-dotenv==1.0.0
